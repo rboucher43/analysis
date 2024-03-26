@@ -39,9 +39,9 @@ using namespace HeavyFlavorReco;
 /*      cdean@bnl.gov       */
 /****************************/
 
-void Fun4All_MDC2reco(vector<string> myInputLists = {"condorJob/fileLists/productionFiles-CHARM-dst_tracks-00000.list"}, const int nEvents = 0)
+void Fun4All_MDC2reco(vector<string> myInputLists = {"demo.list"}, const int nEvents = 10)
 {
-  bool runDemo = true; //Run the pure Bs2JpsiKs0 reco
+  bool runDemo = false; //Run the pure Bs2JpsiKs0 reco
 
   gSystem->Load("libg4dst.so");
   gSystem->Load("libFROG.so");
@@ -78,7 +78,7 @@ void Fun4All_MDC2reco(vector<string> myInputLists = {"condorJob/fileLists/produc
 
   //Create the server
   Fun4AllServer *se = Fun4AllServer::instance();
-  se->Verbosity(1);
+  se->Verbosity(10);
   if (runDemo)
   {
     Fun4AllInputManager *infile = new Fun4AllDstInputManager("DSTin");

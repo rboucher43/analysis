@@ -13,7 +13,8 @@ R__LOAD_LIBRARY(libkfparticle_sphenix.so)
 namespace HeavyFlavorReco
 {
   // https://wiki.bnl.gov/sPHENIX/index.php/KFParticle
-  string decayDescriptor = "[D0 -> K^- pi^+]cc";  //See twiki on how to set this
+  //string decayDescriptor = "[D0 -> K^- pi^+]cc";  //See twiki on how to set this
+  string decayDescriptor = "[Upsilon -> e^+ e^-]cc";
   string reconstructionName = "myTestReco";         //Used for naming output folder, file and node
   string outputRecoFile;
   string outputHFEffFile;
@@ -24,7 +25,7 @@ namespace HeavyFlavorReco
   bool runTracking = false;  //Run tracking on DSTs
   bool buildTruthTable = false;
   bool runQA = false;        //Run QA, needs set up
-  int VERBOSITY = 0;
+  int VERBOSITY = 100;
 };  // namespace HeavyFlavorReco
 
 using namespace HeavyFlavorReco;
@@ -34,21 +35,23 @@ void myHeavyFlavorReco()
   Fun4AllServer *se = Fun4AllServer::instance();
 
   KFParticle_sPHENIX *kfparticle = new KFParticle_sPHENIX(reconstructionName);
-  kfparticle->Verbosity(1);
+  kfparticle->Verbosity(100);
 
   kfparticle->setDecayDescriptor(decayDescriptor);
 
   if (runTrackEff) kfparticle->setTrackMapNodeName("HFSelected_SvtxTrackMap");
 
+  kfparticle->setTrackMapNodeName("SvtxTrackMap");
+  kfparticle->setVertexMapNodeName("SvtxVertexMap");
   kfparticle->doTruthMatching(getTruthInfo);
   kfparticle->getDetectorInfo(false);
   kfparticle->getCaloInfo(getCaloInfo);
   kfparticle->getAllPVInfo(false);
-  kfparticle->allowZeroMassTracks(true);
+  kfparticle->allowZeroMassTracks(false);
   kfparticle->saveDST(false);
   kfparticle->saveParticleContainer(false);
 
-  bool fixToPV = true;
+  bool fixToPV = false;
   bool useFakePV = false;
 
   if (useFakePV)
@@ -78,8 +81,8 @@ void myHeavyFlavorReco()
 
   //Parent parameters
   kfparticle->setMotherPT(0);
-  kfparticle->setMinimumMass(1.70);
-  kfparticle->setMaximumMass(1.90);
+  kfparticle->setMinimumMass(7);
+  kfparticle->setMaximumMass(11);
   kfparticle->setMaximumMotherVertexVolume(0.03);
 
   kfparticle->setOutputName(outputRecoFile);
@@ -92,7 +95,7 @@ void myDemoReco()
   Fun4AllServer *se = Fun4AllServer::instance();
 
   KFParticle_sPHENIX *kfparticle = new KFParticle_sPHENIX(reconstructionName);
-  kfparticle->Verbosity(1);
+  kfparticle->Verbosity(100);
 
   kfparticle->setDecayDescriptor("B_s0 -> {J/psi -> e^+ e^-} {K_S0 -> pi^+ pi^-}");
   kfparticle->setTrackMapNodeName("HFSelected_SvtxTrackMap");
